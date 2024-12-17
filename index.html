@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>❤️Adedonha A&C❤️</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: ##ff9797;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        header {
+          border-radius: 40px;;
+            background-color: #fb5656;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 2px -2px gray;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        main {
+            padding: 20px;
+            margin-top: 80px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            flex: 1;
+        }
+
+        .form-container, .game-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1em;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #current-letter {
+            font-size: 4em;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: red;
+        }
+
+        @media (min-width: 600px) {
+            .category {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+
+            #current-letter {
+                font-size: 5em;
+            }
+        }
+
+        @media (min-width: 768px) {
+            main {
+                margin-top: 100px;
+            }
+
+            header {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>❤️Adedonha A&C❤️</h1>
+    </header>
+    <main>
+        <section class="form-container">
+            <h2>Nova Rodada</h2>
+            <input type="text" id="player-name" placeholder="Nome do Jogador" required>
+            <button id="start-button">Começar Jogo</button>
+        </section>
+        <section id="game-section" class="game-container" style="display:none;">
+            <h2><b>Letra Escolhida:</b> <br><span id="current-letter"></span></h2>
+            <div class="category">
+                <div>
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" data-category="name">
+                </div>
+                <div>
+                    <label for="place">Lugar:</label>
+                    <input type="text" id="place" data-category="place">
+                </div>
+                <div>
+                    <label for="object">Objeto:</label>
+                    <input type="text" id="object" data-category="object">
+                </div>
+            </div>
+            <div>
+                <button id="stop-button">Stop</button>
+                <button id="next-round-button" style="display:none;">Próxima Rodada</button>
+                <button id="finish-button" style="display:none;">Finalizar</button>
+            </div>
+            <h3>Pontuação: <span id="score">0</span></h3>
+        </section>
+        <section id="result-section" class="game-container" style="display:none;">
+            <h2><b>Resultado Final</b></h2>
+            <p>Pontuação Total: <span id="final-score"></span></p>
+            <button id="restart-button">Recomeçar</button>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('start-button');
+            const stopButton = document.getElementById('stop-button');
+            const nextRoundButton = document.getElementById('next-round-button');
+            const finishButton = document.getElementById('finish-button');
+            const restartButton = document.getElementById('restart-button');
+            const playerNameInput = document.getElementById('player-name');
+            const gameSection = document.getElementById('game-section');
+            const resultSection = document.getElementById('result-section');
+            const currentLetterSpan = document.getElementById('current-letter');
+            const scoreSpan = document.getElementById('score');
+            const finalScoreSpan = document.getElementById('final-score');
+            const categories = ['name', 'place', 'object'];
+            let currentLetter = '';
+            let score = 0;
+
+            function getRandomLetter() {
+                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                return letters[Math.floor(Math.random() * letters.length)];
+            }
+
+            function animateLetterSelection(callback) {
+                let count = 0;
+                const interval = setInterval(() => {
+                    currentLetter = getRandomLetter();
+                    currentLetterSpan.textContent = currentLetter;
+                    count++;
+                    if (count === 19) {
+                        clearInterval(interval);
+                        callback();
+                    }
+                }, 100);
+            }
+
+            function startRound() {
+                gameSection.style.display = 'block';
+                resultSection.style.display = 'none';
+                animateLetterSelection(() => {
+                    console.log(`Letra selecionada: ${currentLetter}`);
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                });
+            }
+
+            startButton.addEventListener('click', () => {
+                if (playerNameInput.value.trim() === '') {
+                    alert('Por favor, insira seu nome.');
+                    return;
+                }
+                startRound();
+            });
+
+            stopButton.addEventListener('click', () => {
+                const inputs = document.querySelectorAll('input[data-category]');
+                let roundScore = 0;
+
+                inputs.forEach(input => {
+                    if (input.value.trim().toUpperCase().startsWith(currentLetter)) {
+                        roundScore += 10;
+                    }
+                    console.log(`${input.dataset.category}: ${input.value}`);
+                });
+
+                score += roundScore;
+                scoreSpan.textContent = score;
+                alert(`Você fez ${roundScore} pontos nesta rodada! ${name}`);
+                inputs.forEach(input => input.value = '');
+                nextRoundButton.style.display = 'inline-block';
+                finishButton.style.display = 'inline-block';
+            });
+
+            nextRoundButton.addEventListener('click', () => {
+                nextRoundButton.style.display = 'none';
+                finishButton.style.display = 'none';
+                startRound();
+            });
+
+            finishButton.addEventListener('click', () => {
+                gameSection.style.display = 'none';
+                resultSection.style.display = 'block';
+                finalScoreSpan.textContent = score;
+            });
+
+            restartButton.addEventListener('click', () => {
+                score = 0;
+                scoreSpan.textContent = score;
+                playerNameInput.value = '';
+                gameSection.style.display = 'none';
+                resultSection.style.display = 'none';
+                alert('Recomeçando o jogo! Insira seu nome para começar novamente.');
+            });
+        });
+    </script>
+</body>
+</html>
