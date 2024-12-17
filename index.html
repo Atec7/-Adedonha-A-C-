@@ -2,11 +2,12 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>❤️Adedonha A&C❤️</title>
     <style>
         body {
-            font-family: Arial;
-            background-color: ##ff9797;
+            font-family: Arial, sans-serif;
+            background-color: #ff9797;
             margin: 0;
             padding: 0;
             color: #333;
@@ -19,7 +20,7 @@
         }
 
         header {
-          border-radius: 40px;;
+            border-radius: 40px;
             background-color: #fb5656;
             color: white;
             padding: 20px;
@@ -71,6 +72,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            gap: 10px;
         }
 
         #current-letter {
@@ -88,12 +91,12 @@
         }
 
         button:hover {
-            background-color: red;
+            background-color: darkred;
         }
 
         @media (min-width: 600px) {
             .category {
-                flex-direction: row;
+                flex-wrap: wrap;
                 justify-content: space-around;
             }
 
@@ -226,7 +229,7 @@
 
                 score += roundScore;
                 scoreSpan.textContent = score;
-                alert(`Você fez ${roundScore} pontos nesta rodada! ${name}`);
+                alert(`Você fez ${roundScore} pontos nesta rodada!`);
                 inputs.forEach(input => input.value = '');
                 nextRoundButton.style.display = 'inline-block';
                 finishButton.style.display = 'inline-block';
