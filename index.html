@@ -94,6 +94,11 @@
             background-color: darkred;
         }
 
+        #timer {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
         @media (min-width: 600px) {
             .category {
                 flex-wrap: wrap;
@@ -122,7 +127,9 @@
 </head>
 <body>
     <header>
-        <h1>❤️Adedonha A&C❤️</h1>
+        <h1>❤️Adedonha A&C❤️</h1><br>
+                    <div id="timer">Tempo Restante: <span
+                    id="time-left">60</span><b>s</b></div>
     </header>
     <main>
         <section class="form-container">
@@ -152,6 +159,7 @@
                 <button id="finish-button" style="display:none;">Finalizar</button>
             </div>
             <h3>Pontuação: <span id="score">0</span></h3>
+
         </section>
         <section id="result-section" class="game-container" style="display:none;">
             <h2><b>Resultado Final</b></h2>
@@ -159,103 +167,7 @@
             <button id="restart-button">Recomeçar</button>
         </section>
     </main>
+    <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const startButton = document.getElementById('start-button');
-            const stopButton = document.getElementById('stop-button');
-            const nextRoundButton = document.getElementById('next-round-button');
-            const finishButton = document.getElementById('finish-button');
-            const restartButton = document.getElementById('restart-button');
-            const playerNameInput = document.getElementById('player-name');
-            const gameSection = document.getElementById('game-section');
-            const resultSection = document.getElementById('result-section');
-            const currentLetterSpan = document.getElementById('current-letter');
-            const scoreSpan = document.getElementById('score');
-            const finalScoreSpan = document.getElementById('final-score');
-            const categories = ['name', 'place', 'object'];
-            let currentLetter = '';
-            let score = 0;
-
-            function getRandomLetter() {
-                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                return letters[Math.floor(Math.random() * letters.length)];
-            }
-
-            function animateLetterSelection(callback) {
-                let count = 0;
-                const interval = setInterval(() => {
-                    currentLetter = getRandomLetter();
-                    currentLetterSpan.textContent = currentLetter;
-                    count++;
-                    if (count === 19) {
-                        clearInterval(interval);
-                        callback();
-                    }
-                }, 100);
-            }
-
-            function startRound() {
-                gameSection.style.display = 'block';
-                resultSection.style.display = 'none';
-                animateLetterSelection(() => {
-                    console.log(`Letra selecionada: ${currentLetter}`);
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-                });
-            }
-
-            startButton.addEventListener('click', () => {
-                if (playerNameInput.value.trim() === '') {
-                    alert('Por favor, insira seu nome.');
-                    return;
-                }
-                startRound();
-            });
-
-            stopButton.addEventListener('click', () => {
-                const inputs = document.querySelectorAll('input[data-category]');
-                let roundScore = 0;
-
-                inputs.forEach(input => {
-                    if (input.value.trim().toUpperCase().startsWith(currentLetter)) {
-                        roundScore += 10;
-                    }
-                    console.log(`${input.dataset.category}: ${input.value}`);
-                });
-
-                score += roundScore;
-                scoreSpan.textContent = score;
-                alert(`Você fez ${roundScore} pontos nesta rodada!`);
-                inputs.forEach(input => input.value = '');
-                nextRoundButton.style.display = 'inline-block';
-                finishButton.style.display = 'inline-block';
-            });
-
-            nextRoundButton.addEventListener('click', () => {
-                nextRoundButton.style.display = 'none';
-                finishButton.style.display = 'none';
-                startRound();
-            });
-
-            finishButton.addEventListener('click', () => {
-                gameSection.style.display = 'none';
-                resultSection.style.display = 'block';
-                finalScoreSpan.textContent = score;
-            });
-
-            restartButton.addEventListener('click', () => {
-                score = 0;
-                scoreSpan.textContent = score;
-                playerNameInput.value = '';
-                gameSection.style.display = 'none';
-                resultSection.style.display = 'none';
-                alert('Recomeçando o jogo! Insira seu nome para começar novamente.');
-            });
-        });
-    </script>
 </body>
 </html>
