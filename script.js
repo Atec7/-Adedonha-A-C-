@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getRandomLetter() {
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        return letters[Math.floor(Math.random() * letters.length)];
+        return letters[Math.floor(Math.random()*letters.length)];
     }
 
     function animateLetterSelection(callback) {
@@ -106,10 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         score += roundScore;
         scoreSpan.textContent = score;
-        alert(`Você fez ${roundScore} pontos nesta rodada!`);
-        inputs.forEach(input => input.value = '');
-        nextRoundButton.style.display = 'inline-block';
-        finishButton.style.display = 'inline-block';
+
+        if (roundScore < 30) {
+            alert('Você não atingiu 30 pontos. Redirecionando...');
+            window.location.href = 'roda.html';
+        } else {
+            alert(`Você fez ${roundScore} pontos nesta rodada!`);
+            inputs.forEach(input => input.value = '');
+            nextRoundButton.style.display = 'inline-block';
+            finishButton.style.display = 'inline-block';
+        }
         saveToLocalStorage();
     });
 
