@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta de Desafios</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .roleta-container {
+            position: relative;
+            width: 90vw;
+            max-width: 500px;
+            height: 90vw;
+            max-height: 500px;
+        }
+        .roleta {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 5s ease-out;
+        }
+        .roleta img {
+            width: 60%;
+            height: 60%;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .roleta ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .roleta li {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: #eee;
+            transform-origin: 100% 100%;
+            clip-path: polygon(100% 0, 100% 100%, 0% 100%);
+            text-align: center;
+            font-size: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+        }
+        .roleta li:nth-child(odd) {
+            background-color: #ddd;
+        }
+        .roleta li:hover {
+            background-color: #ccc;
+        }
+        .spin-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .spin-button:hover {
+            background-color: #555;
+        }
+        .seta {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 20px solid red;
+        }
+        .descricao {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .voltar-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .voltar-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="roleta-container">
+        <div class="seta"></div>
+        <div class="roleta" id="roleta">
+            <img src="halevir.png" alt="Símbolo de Hipnose">
+            <ul id="desafios"></ul>
+        </div>
+    </div>
+    <button class="spin-button" onclick="girarRoleta()">Girar a Roleta</button>
+    <div class="descricao" id="descricao"></div>
+    <button class="voltar-button" onclick="voltar()">Voltar ao Jogo</button>
+
+    <script>
+        const desafios = [
+            "Imitar uma galinha por 1 minuto",
+            "Fazer 10 polichinelos",
+            "Dançar como um robô por 30 segundos",
+            "Fazer uma careta engraçada",
+            "Pular em um pé só por 20 segundos",
+            "Imitar um cachorro latindo",
+            "Correr no lugar por 1 minuto",
+            "Fazer 5 flexões",
+            "Dançar a Macarena",
+            "Fingir ser uma árvore balançando ao vento",
+            "Pular corda imaginária por 30 segundos",
+            "Fazer 10 agachamentos",
+            "Andar como um caranguejo por 20 segundos",
+            "Imitar um gato miando",
+            "Dançar como se estivesse no gelo",
+            "Fazer uma dança engraçada",
+            "Imitar um peixe nadando",
+            "Fingir ser um super-herói voando",
+            "Dar 5 voltas em torno de si mesmo",
+            "Dançar como se estivesse em uma festa",
+            "Fazer 10 abdominais",
+            "Andar como um pato",
+            "Pular como um coelho",
+            "Fingir estar em câmera lenta",
+            "Fazer 15 polichinelos",
+            "Dançar como um ninja",
+            "Imitar um elefante com tromba",
+            "Pular como um sapo",
+            "Fingir ser uma estátua por 30 segundos",
+            "Imitar uma vaca mugindo"
+        ];
+
+        const roleta = document.getElementById('desafios');
+
+        for (let i = 0; i < desafios.length; i++) {
+            const li = document.createElement('li');
+            li.style.transform = `rotate(${i * (360 / desafios.length)}deg) skewY(-60deg)`; // Ajustar ângulo de inclinação
+            roleta.appendChild(li);
+        }
+
+        function girarRoleta() {
+            const roleta = document.getElementById('roleta');
+            const randomDegree = Math.floor(Math.random() * 360) + 3600;
+            roleta.style.transform = `rotate(${randomDegree}deg)`;
+
+            setTimeout(() => {
+                const selectedIndex = Math.floor(((randomDegree % 360) / (360 / desafios.length)));
+                const descricao = document.getElementById('descricao');
+                descricao.innerText = desafios[selectedIndex];
+            }, 5000); // Esperar 5 segundos até a roleta parar
+        }
+
+        function voltar() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
